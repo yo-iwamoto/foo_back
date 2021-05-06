@@ -14,3 +14,7 @@ development:
 test:
   <<: *default
   database: <%= ENV['FOO_DB_TEST'] %>
+
+production:
+  <<: *default
+  database: <%= ENV['DB_NAME'] %>
