@@ -27,9 +27,6 @@ Rails.application.configure do
 
   config.log_formatter = ::Logger::Formatter.new
 
-  config.assets.compile = true
-  config.assets.initialize_on_precompile = false
-
   if ENV["RAILS_LOG_TO_STDOUT"].present?
     logger           = ActiveSupport::Logger.new(STDOUT)
     logger.formatter = config.log_formatter
