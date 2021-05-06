@@ -17,4 +17,4 @@ test:
 
 production:
   <<: *default
-  database: <%= ENV['DB_NAME'] %>
+  database: <%= ENV['FOO_DB_NAME'] %>
