@@ -10,6 +10,7 @@ gem 'mysql2'
 gem 'dotenv-rails'
 gem 'rack-cors'
 gem 'jwt', '>= 2.1.0'
+gem 'jbuilder', '~> 2.7'
 gem 'actionpack', '>= 6.1.3.2'
 
 group :development, :test do

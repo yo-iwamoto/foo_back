@@ -3,8 +3,8 @@ class ApiController < ActionController::API
     render status: 200, json: { status: 200, message: "Success" }
   end
 
-  def response_bad_request
-    render status: 400, json: { status: 400, message: 'Bad Request' }
+  def response_bad_request(message)
+    render status: 400, json: { status: 400, message: message }
   end
 
   def response_unauthorized
