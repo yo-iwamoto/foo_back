@@ -1,6 +1,10 @@
 class JwtAuth
   ALG = 'HS256'.freeze
-  SECRET_KEY = Rails.application.credentials.config[:secret_key_base]
+  if Rails.env === 'production'
+    SECRET_KEY = ENV['SECRET_KEY']
+  else
+    SECRET_KEY = Rails.application.credentials.config[:secret_key_base]
+  end
   EXPIRED_AFTER = 60 * 60 * 24 * 360
 
   def self.tokenize(uid)
