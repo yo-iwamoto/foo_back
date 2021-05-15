@@ -1,6 +1,6 @@
 class JwtAuth
   ALG = 'HS256'.freeze
-  SECRET_KEY = 'auth:' + Rails.application.credentials.config[:secret_key_base]
+  SECRET_KEY = Rails.application.credentials.config[:secret_key_base]
   EXPIRED_AFTER = 60 * 60 * 24 * 360
 
   def self.tokenize(uid)
