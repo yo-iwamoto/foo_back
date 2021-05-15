@@ -23,24 +23,18 @@ class ApiController < ActionController::API
     render status: 500, json: { status: 500, message: 'Internal Server Error' }
   end
 
-  # def authenticate_user?
-  #   response_bad_request unless request.headers['Access-Token']
-  # end
+  def verify_with_token
+    token = request.headers['Access-Token']
+    return unless token
 
-  # def current_user
-  #   User.find_by!(id: decode_access_token[0]['uid'])
-  # end
+    begin
+      decoded_token = JwtAuth.decode(token)[0]
+    rescue JWT::DecodeError
+      response_unauthorized
+    end
 
-  # def correct_community_center?(community_center)
-  #   current_user.community_center == community_center
-  # end
+    return if decoded_token['exp'] < Time.now.to_i
 
-  # private
-
-  #   def decode_access_token
-  #     hmac_secret = ENV['SECRET_KEY']
-  #     token = request.headers['Access-Token']
-  #     JWT.decode token, hmac_secret, true, { algorithm: 'HS256' }
-  #   end
-
+    @user = User.find_by(uid: decoded_token['uid'])
+  end
 end

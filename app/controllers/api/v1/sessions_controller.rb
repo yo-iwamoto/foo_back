@@ -1,10 +1,13 @@
 class Api::V1::SessionsController < ApiController
   def create
+    return if verify_with_token
+
     begin
       @user = User.find_by!(uid: params[:uid])
     rescue ActiveRecord::RecordNotFound
       @user = User.create(user_params)
     end
+
     response_bad_request(@user.errors.message) if !@user
     token = JwtAuth.tokenize(params[:uid])
     response.set_header('Access-Token', token)
