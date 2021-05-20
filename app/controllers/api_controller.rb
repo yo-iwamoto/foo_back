@@ -23,7 +23,7 @@ class ApiController < ActionController::API
     render status: 500, json: { status: 500, message: 'Internal Server Error' }
   end
 
-  def verify_with_token
+  def current_user
     token = request.headers['Access-Token']
     return unless token
 
@@ -35,6 +35,6 @@ class ApiController < ActionController::API
 
     return if decoded_token['exp'] < Time.now.to_i
 
-    @user = User.find_by(uid: decoded_token['uid'])
+    User.find_by(uid: decoded_token['uid'])
   end
 end

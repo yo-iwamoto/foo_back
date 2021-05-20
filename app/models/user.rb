@@ -7,4 +7,8 @@ class User < ApplicationRecord
 
   validates :uid, presence: true
   validates :name, presence: true
+
+  def liked?(shop)
+    likes.where(shop_id: shop.id).any?
+  end
 end

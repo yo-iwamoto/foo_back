@@ -1,6 +1,7 @@
 class Api::V1::SessionsController < ApiController
   def create
-    return if verify_with_token
+    @user = current_user
+    return if @user
 
     begin
       @user = User.find_by!(uid: params[:uid])
