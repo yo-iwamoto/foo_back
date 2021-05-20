@@ -19,6 +19,9 @@ class Api::V1::Shops::LikesController < ApiController
     begin
       if like.save!
         @message = 'success'
+        if current_user.likes.count == 1
+          @message = 'first'
+        end
       else
         response_bad_request(like.errors.messages)
       end

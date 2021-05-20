@@ -30,7 +30,7 @@ module FooBack
         origins "*"
         resource "*",
           headers: :any,
-          methods: [:get, :post, :put, :update, :delete, :options, :head],
+          methods: [:get, :post, :patch, :update, :delete, :options, :head],
           expose: ['Access-Token']
       end
     end
