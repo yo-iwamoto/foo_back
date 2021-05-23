@@ -7,7 +7,7 @@ class Api::V1::Shops::LikesController < ApiController
       if shop
         @result.append(current_user.liked?(shop))
       else
-        Shop.create()
+        Shop.create(hotpepper_id: id)
       end
     end
   end
@@ -34,8 +34,12 @@ class Api::V1::Shops::LikesController < ApiController
     shop = Shop.where(hotpepper_id: params[:id]).first
     if shop
       like = current_user.likes.where(shop_id: shop.id).first
-      like.destroy
-      @message = 'success'
+      if like
+        like.destroy
+        @message = 'success'
+      else
+        @message = 'fail'
+      end
     else
       response_bad_request('fail')
     end
