@@ -7,10 +7,9 @@ Rails.application.routes.draw do
       end
       resource :sessions, only: %i[create]
 
-      namespace :shops do
-        post '/check_likes' => 'likes#index'
-        resources :likes, only: %i[create destroy]
-        resources :reports, only: %i[index create destroy]
+      resources :shops, only: %i[index], param: :hotpepper_id do
+        resources :likes, only: %i[create destroy], module: :shops
+        resources :reports, only: %i[create destroy], module: :shops
       end
     end
   end

@@ -1,53 +1,25 @@
 class Api::V1::Shops::LikesController < ApiController
-  def index
-    @result = []
-    ids = params[:ids]
-    ids.each do |id|
-      shop = Shop.where(hotpepper_id: id).first
-      if shop
-        @result.append(current_user.liked?(shop))
-      else
-        Shop.create(hotpepper_id: id)
-      end
-    end
-  end
-
   def create
-    shop = Shop.where(hotpepper_id: params[:hotpepper_id]).first
-    shop = Shop.create(shop_params) unless shop
-    like = current_user.likes.build(shop_id: shop.id)
+    @user = current_user
+    @shop = Shop.where(hotpepper_id: params[:shop_hotpepper_id]).first
+    @shop ||= Shop.create(hotpepper_id: params[:shop_hotpepper_id])
+    like = @user.likes.build(shop_id: @shop.id)
     begin
-      if like.save!
-        @message = 'success'
-        if current_user.likes.count == 1
-          @message = 'first'
-        end
-      else
+      if !like.save!
         response_bad_request(like.errors.messages)
       end
     rescue ActiveRecord::RecordNotUnique
-      @message = 'already_liked'
     end
   end
 
   def destroy
-    shop = Shop.where(hotpepper_id: params[:id]).first
-    if shop
-      like = current_user.likes.where(shop_id: shop.id).first
+    @user = current_user
+    @shop = Shop.where(hotpepper_id: params[:shop_hotpepper_id]).first
+    if @shop
+      like = @user.likes.where(shop_id: @shop.id).first
       if like
         like.destroy
-        @message = 'success'
-      else
-        @message = 'fail'
       end
-    else
-      response_bad_request('fail')
     end
-  end
-
-  private
-
-  def shop_params
-    params.permit(:hotpepper_id)
   end
 end
