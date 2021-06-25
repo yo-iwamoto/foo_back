@@ -1,25 +1,24 @@
 class Api::V1::Shops::LikesController < ApiController
   def create
-    @user = current_user
-    @shop = Shop.where(hotpepper_id: params[:shop_hotpepper_id]).first
-    @shop ||= Shop.create(hotpepper_id: params[:shop_hotpepper_id])
-    like = @user.likes.build(shop_id: @shop.id)
+    shop = Shop.where(hotpepper_id: params[:shop_hotpepper_id]).first || Shop.create(hotpepper_id: params[:shop_hotpepper_id])
     begin
-      if !like.save!
-        response_bad_request(like.errors.messages)
-      end
+      shop.likes.create(user_id: current_user.id)
     rescue ActiveRecord::RecordNotUnique
     end
+    result = ShopsHandler.getAPIResult({ id: shop.hotpepper_id }, current_user)
+    @shop = result[:shop][0]
   end
 
   def destroy
-    @user = current_user
-    @shop = Shop.where(hotpepper_id: params[:shop_hotpepper_id]).first
-    if @shop
-      like = @user.likes.where(shop_id: @shop.id).first
-      if like
-        like.destroy
-      end
+    begin
+      shop = Shop.find_by!(hotpepper_id: params[:shop_hotpepper_id])
+    rescue ActiveRecord::RecordNotFound
+      response_bad_request('record not found')
     end
+    if !!shop & shop.isLikedBy(current_user)
+      shop.likes.find_by!(user_id: current_user[:id]).destroy
+    end
+    result = ShopsHandler.getAPIResult({ id: shop[:hotpepper_id] }, current_user)
+    @shop = result[:shop][0]
   end
 end

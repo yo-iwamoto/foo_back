@@ -1,12 +1,14 @@
 class Api::V1::ShopsController < ApiController
+  KEY = ENV['HOTPEPPER_API_KEY'].freeze
+  URL = "https://webservice.recruit.co.jp/hotpepper/gourmet/v1?key=#{KEY}&format=json".freeze
+
   def index
-    @user = current_user
-    ids = params[:ids]
-    @shops = Shop.where(hotpepper_id: ids)
+    @result = ShopsHandler.getAPIResult(query_params, current_user)
   end
 
-  def show
-    @user = current_user
-    @shop = Shop.find_by(hotpepper_id: params[:hotpepper_id])
+  private
+
+  def query_params
+    params.permit(:keyword, :lat, :lng, :range, :count, :id)
   end
 end

@@ -14,12 +14,4 @@ class Shop < ApplicationRecord
   def isReportedBy(user)
     reports.where(user_id: user.id).any?
   end
-
-  def likesCount
-    likes.count
-  end
-
-  def reportsCount
-    reports.count
-  end
 end
