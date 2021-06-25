@@ -6,7 +6,8 @@ class Api::V1::Users::LikesController < ApiController
     if current_user.liked_shops.empty?
       render status: 204, json: { status: 204, message: "no shops found" }
     else
-      current_user.liked_shops.each do |shop|
+      current_user.liked_shops.each_with_index do |shop, index|
+        break if index == 20
         id.push(shop[:hotpepper_id])
       end
       @result = ShopsHandler.getAPIResult({ id: id.join(',') }, current_user)

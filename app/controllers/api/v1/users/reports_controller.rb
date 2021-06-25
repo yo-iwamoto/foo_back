@@ -3,7 +3,8 @@ class Api::V1::Users::ReportsController < ApiController
 
   def index
     id = []
-    current_user.reported_shops.each do |shop|
+    current_user.reported_shops.each_with_index do |shop, index|
+      break if index == 20
       id.push(shop[:hotpepper_id])
     end
     @result = ShopsHandler.getAPIResult({ id: id }, current_user)
